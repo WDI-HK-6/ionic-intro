@@ -30,6 +30,6 @@
   - Register for an account
 
 7. Simulate iOS
-  - ionic platform add ios
-  - ionic build ios
-  - ionic emulate ios
+  - `ionic platform add ios`
+  - `ionic build ios`
+  - `ionic emulate ios`
