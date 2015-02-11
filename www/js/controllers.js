@@ -1,43 +1,68 @@
-angular.module('starter.controllers', ['firebase'])
+// Include Firebase
+angular.module('starter.controllers', ['firebase', 'ngCordova'])
 
-.controller('DashCtrl', function($scope) {})
+.controller('DashCtrl', function($scope, $ionicPlatform, $cordovaGeolocation, $interval) {
+  console.log("Testing Geolocation");
 
-.controller('ChatsCtrl', function($scope, Chats, $firebase) {
+  $ionicPlatform.ready(function() {
+    $interval(function(){
+      getLocation();
+    }, 2000);
+  });
 
-  console.log('testing');
+  function getLocation() {
+    var posOptions = {timeout: 10000, enableHighAccuracy: false};
 
+    $cordovaGeolocation
+      .getCurrentPosition(posOptions)
+      .then(function (position) {
+        console.log("logging");
+        $scope.lat  = position.coords.latitude;
+        $scope.long = position.coords.longitude;
+        console.log($scope.lat, $scope.long);
+      }, function(err) {
+        // error
+        console.log("error")
+      });
+  }
+})
+
+// Include $firebase
+.controller('ChatsCtrl', function($scope, $firebase) {
+  // $scope.chats = ["hihi", "hello world"]
+  
+  // Initial Firebase object
+  // Use your own firebase name, not 'burning-fire-4355'
   var myDataRef = new Firebase('https://burning-fire-4355.firebaseio.com/');
 
-  var usersRef = myDataRef.child("messages");
+  // Define the 'parent key'
+  var usersRef = myDataRef.child("clement");
 
+  // Write the 'value' belonging to the 'key' to Firebase
+  // Save -> Type something into the input filed -> Press 'Submit' -> Check Firebase => Profit!
   $scope.submitMessage = function(message){
     usersRef.push(message);
+    $scope.currentMessage = '';
   }
 
-  // myDataRef.on('child_added', function(snapshot) {
-  //   $scope.chats = snapshot.val();
-  //   console.log(snapshot.val());
-  // });
-
-  // create an AngularFire reference to the data
+  // // create an AngularFire reference to the data
   var sync = $firebase(usersRef);
-  // download the data into a local object
+  // // download the data into a local object
   $scope.chats = sync.$asObject();
 
-  console.log($scope.chats);
-
-  // $scope.chats = Chats.all();
-  // $scope.remove = function(chat) {
-  //   Chats.remove(chat);
-  // }
+  // console.log($scope.chats);
 })
 
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('FriendsCtrl', function($scope, Friends) {
-  $scope.friends = Friends.all();
+.controller('CountriesCtrl', function($scope, $http) {
+  // $scope.countries = ['china', 'us'];
+
+  $http.get('http://restcountries.eu/rest/v1/all').success(function(response){
+    $scope.countries = response
+  });
 })
 
 .controller('FriendDetailCtrl', function($scope, $stateParams, Friends) {
