@@ -5,7 +5,7 @@
   - Download and install from http://nodejs.org/
 
 2. Install Ionic and Cordova
-  - Inside terminal: `npm install -g cordova ionic`
+  - Inside terminal: `npm install -g cordova ionic ios-sim`
   - npm stands for node package manager. It manages libraries for node.js
   - Cordova is another library that will eventually turn a HTML5 website into a hybrid mobile app
   - Ionic is a bunch of libraries, including Angular, that help you easily build a hybrid mobile app
